@@ -12,7 +12,7 @@ object NetworkApiService {
 
     val imageApi: NetworkService by lazy {
         val retrofit = Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         return@lazy retrofit.create(NetworkService::class.java)

@@ -27,7 +27,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "type"
 
+    productFlavors{
+        dev{
+            dimension "type"
+
+            buildConfigField "String", "BASE_URL", "\"https://www.thewrap.com/marvel-movies-ranked-worst-best-avengers-endgame-x-men-dark-phoenix-spider-man-far-from-home-coronavirus/\""
+        }
+        prod{
+            dimension "type"
+
+            buildConfigField "String", "BASE_URL", "\"https://www.thewrap.com/marvel-movies-ranked-worst-best-avengers-endgame-x-men-dark-phoenix-spider-man-far-from-home-coronavirus/\""
+        }
+    }
 }
 
 dependencies {
@@ -55,6 +68,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation 'org.jsoup:jsoup:1.13.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
