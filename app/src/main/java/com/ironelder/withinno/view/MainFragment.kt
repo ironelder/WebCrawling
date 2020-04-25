@@ -20,8 +20,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getInitialcount()
-        viewModel.countLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.startWebCrawling()
+        viewModel.webCrawlingData.observe(viewLifecycleOwner, Observer {
             println("lifeCycle value = $it")
         })
     }
