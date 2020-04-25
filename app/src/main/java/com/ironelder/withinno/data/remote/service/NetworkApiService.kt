@@ -8,7 +8,7 @@ import java.io.IOException
 
 object NetworkApiService {
     val crawlingApi: Observable<Document> by lazy {
-        return@lazy Observable.create {
+        return@lazy Observable.create<Document> {
             try {
                 val document = Jsoup.connect(BuildConfig.BASE_URL).get()
                 it.onNext(document)
