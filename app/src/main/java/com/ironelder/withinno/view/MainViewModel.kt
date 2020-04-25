@@ -4,58 +4,50 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ironelder.withinno.BuildConfig
+import com.ironelder.withinno.data.model.CrawlingResult
+import com.ironelder.withinno.domain.repository.WebCrawlingRepositoryImpl
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
+import org.jsoup.nodes.Element
 import java.io.IOException
 
-class MainViewModel:ViewModel() {
-    private var clickCount:Int =0
+class MainViewModel : ViewModel() {
+    private var clickCount: Int = 0
     val countLiveData = MutableLiveData<Int>()
-    private val disposBag = CompositeDisposable()
-    open fun getInitialcount(){
-//        Thread {
-//            while (clickCount < 10){
-//                clickCount+=1
-//                countLiveData.postValue(clickCount)
-//                Thread.sleep(1000)
-//            }
-//        }.start()
-
-        disposBag.add(
-            getJsoupDocument()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val element: Elements = it.select("div.image-wrap img[src]")
-                    element.forEach {el ->
-                        val img = el.attr("src")
-                        Log.d("ironelderLog", "img = $img")
-                    }
-                }
-        )
+    private val disposeBag = CompositeDisposable()
+    open fun getInitialcount() {
+        webCrawling()
     }
 
-    private fun getJsoupDocument() : Observable<Document> {
+    private fun getJsoupDocument(): Observable<Document> {
         return Observable.create {
-            try{
+            try {
                 val document = Jsoup.connect(BuildConfig.BASE_URL).get()
                 it.onNext(document)
-            }catch (e:IOException){
+            } catch (e: IOException) {
                 it.onError(e)
-            }finally {
+            } finally {
                 it.onComplete()
             }
         }
     }
 
+    fun webCrawling() {
+        disposeBag.add(
+            WebCrawlingRepositoryImpl.getRemoteWebCrawlingData()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Log.d("ironelderLog", "result yes = ${it}")
+                })
+    }
+
     override fun onCleared() {
         super.onCleared()
-        disposBag.dispose()
+        disposeBag.dispose()
     }
 }
