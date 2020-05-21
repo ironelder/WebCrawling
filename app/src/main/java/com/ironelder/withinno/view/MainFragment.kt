@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ironelder.withinno.R
+import com.ironelder.withinno.component.MainRecyclerAdapter
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
     override fun onCreateView(
@@ -21,8 +23,11 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.startWebCrawling()
+        rv_image_list.apply {
+            adapter = MainRecyclerAdapter()
+        }
         viewModel.webCrawlingData.observe(viewLifecycleOwner, Observer {
-            println("lifeCycle value = $it")
+            (rv_image_list.adapter as MainRecyclerAdapter).setData(it)
         })
     }
 }
